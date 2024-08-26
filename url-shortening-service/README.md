@@ -155,14 +155,16 @@ We can partition the data in two ways -
 > We might have some URLs not accessed even after six months. We can keep them until they expire since storage is cheap.
 
 ```mermaid
-flowchart LR
+flowchart
   client[Client] --> lb1[Load Balancers]
   lb1 --> app[Application Service]
   app --> lb2[Load Balancers]
   lb2 --> cache[Cache Servers]
-  cache <--> db[(Database Servers)]
+  db[(Database Servers)] --> cache
+  lb2 --> db
   cleanup[Cleanup Service] --> db
   alias[Alias Service] --> app
-  aliasdb[AliasDB] --> alias
+  aliasdb[AliasDB] <--> alias
   aliasdb -.-> aliasdb2[Standby AliasDB]
+  cleanup --> aliasdb
 ```
